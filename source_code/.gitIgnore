@@ -1,0 +1,7 @@
+# Node.js dependencies
+node_modules/
+
+# Package distribution
+package-lock.json
+
+git@github.com:loknathPradhan/cicd_project.git

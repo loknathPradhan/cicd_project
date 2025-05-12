@@ -1,0 +1,85 @@
+pipeline {
+    agent{
+
+     docker {
+      image 'abhishekf5/maven-abhishek-docker-agent:v1'
+      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+     }
+    } 
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "Checking out from main branch..."
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          userRemoteConfigs: [[url: 'https://github.com/your-username/your-repo.git']]
+                ])
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running tests..."
+                sh 'npm install'
+                sh 'npm test -- --coverage' // adjust for your framework
+            }
+
+            post {
+                always {
+                    junit 'tests/reports/**/*.xml' // adjust path as needed
+                }
+                failure {
+                    script {
+                        currentBuild.result = 'FAILURE'
+                        error('Tests failed')
+                    }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+            }
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+            post {
+                failure {
+                    script {
+                        currentBuild.result = 'FAILURE'
+                        error('SonarQube analysis failed')
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    dockerImage = docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
+                }
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo "Pipeline failed. Sending notification..."
+            // Add your notification logic here (e.g., Slack, Email)
+        }
+        success {
+            echo "Pipeline succeeded!"
+        }
+    }
+}
