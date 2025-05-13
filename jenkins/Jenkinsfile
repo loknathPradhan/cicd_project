@@ -19,7 +19,7 @@ pipeline {
             steps {
                 dir('source_code') {
                     echo "Installing dependencies..."
-                    sh 'npm ci'
+                    sh 'npm i'
                 }
             }
         }
