@@ -30,8 +30,8 @@ pipeline {
                     echo "Running tests..."
                     sh 'npm test'
                 }
-                junit 'source_code/tests/reports/jest-junit.xml'
-                archiveArtifacts artifacts: 'source_code/tests/reports/jest-junit.xml'
+                junit 'source_code/test/reports/jest-junit.xml'
+                archiveArtifacts artifacts: 'source_code/test/reports/jest-junit.xml'
             }
         }
 
