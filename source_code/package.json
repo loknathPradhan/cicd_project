@@ -1,13 +1,30 @@
 {
-  "dependencies": {
-    "express": "^5.1.0"
-  },
+  "name": "my-node-app",
+  "version": "1.0.0",
+  "description": "A Node.js app with Jest and Jenkins CI",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "jest"
   },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^7.1.0"
+    "jest-junit": "^16.0.0",
+    "supertest": "^7.1.1"
+  },
+  "jest": {
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "tests/reports",
+          "outputName": "jest-junit.xml"
+        }
+      ]
+    ]
   }
 }
