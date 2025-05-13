@@ -17,6 +17,31 @@ pipeline {
                 ])
             }
         }
+        
+        stage('Checkout') {
+            steps {
+                echo "Checking out from main branch..."
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('source_code') {
+                    echo "Installing dependencies..."
+                    sh 'npm ci'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('source_code') {
+                    echo "Running tests..."
+                    sh 'npm test'
+                }
+            }
+        }
 
         stage('Test') {
 
