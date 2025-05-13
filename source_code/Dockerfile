@@ -9,8 +9,10 @@
     RUN npm install --production
     
     # Copy only necessary source files
+    COPY app.js .
     COPY server.js .
-    COPY index.html .
+    COPY public ./public
+
     
     # ----------- Stage 2: Run -----------
     FROM node:18-alpine3.18 AS runner
