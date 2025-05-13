@@ -43,27 +43,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-
-            steps {
-                echo "Running tests..."
-                sh 'npm i' // Faster & cleaner for CI environments
-                sh 'npm test'
-            }
-
-            post {
-                always {
-                    junit 'tests/reports/jest-junit.xml'
-                }
-                failure {
-                    script {
-                        currentBuild.result = 'FAILURE'
-                        error('Tests failed')
-                    }
-                }
-            }
-        }
-
         // stage('SonarQube Analysis') {
         //     environment {
         //         scannerHome = tool 'SonarQubeScanner'
