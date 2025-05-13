@@ -22,7 +22,7 @@ pipeline {
 
             steps {
                 echo "Running tests..."
-                sh 'npm ci' // Faster & cleaner for CI environments
+                sh 'npm i' // Faster & cleaner for CI environments
                 sh 'npm test'
             }
 
