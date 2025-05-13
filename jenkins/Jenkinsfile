@@ -42,13 +42,13 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     dir('source_code') {
-                        sh '''
-                            export npm_config_cache=$WORKSPACE/.npm-cache
-                            npx sonar-scanner \
-                                -Dsonar.projectKey=my-node-app \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=$SONAR_URL \
-                                -Dsonar.login=$SONAR_AUTH_TOKEN
+                     sh '''
+                        export npm_config_cache=$WORKSPACE/.npm-cache
+                        npx --no-install sonar-scanner \
+                            -Dsonar.projectKey=my-node-app \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=$SONAR_URL \
+                            -Dsonar.login=$SONAR_AUTH_TOKEN
                         '''
                     }
                 }
