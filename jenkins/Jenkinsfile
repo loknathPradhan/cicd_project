@@ -11,17 +11,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Checking out from main branch..."
-                checkout([$class: 'GitSCM',
-                          branches: [[name: '*/main']],
-                          userRemoteConfigs: [[url: 'https://github.com/loknathPradhan/cicd_project/']]
-                ])
-            }
-        }
-        
-        stage('Checkout') {
-            steps {
-                echo "Checking out from main branch..."
-                checkout scm
+                checkout scm // OR use the explicit URL version if needed
             }
         }
 
@@ -42,6 +32,7 @@ pipeline {
                 }
             }
         }
+
 
         // stage('SonarQube Analysis') {
         //     environment {
