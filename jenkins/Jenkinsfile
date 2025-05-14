@@ -2,7 +2,7 @@ pipeline {
     agent{
 
         docker {
-            image 'loknathp/node-docker:18-alpine'
+            image 'loknathp/nodeapp-docker:18-alpine'
             args '-u root -v /var/run/docker.sock:/var/run/docker.sock'        }
     } 
 
@@ -42,20 +42,18 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     dir('source_code') {
-                    sh '''
-                        export npm_config_cache=$WORKSPACE/.npm-cache
-                        npx --no-install sonar-scanner || true
-                        chmod +x $(find $npm_config_cache/_npx -type f -name sonar-scanner)
-                        npx --no-install sonar-scanner \
-                            -Dsonar.projectKey=my-node-app \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=$SONAR_URL \
-                            -Dsonar.login=$SONAR_AUTH_TOKEN
+                        sh '''
+                            sonar-scanner \
+                                -Dsonar.projectKey=my-node-app \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=$SONAR_URL \
+                                -Dsonar.login=$SONAR_AUTH_TOKEN
                         '''
                     }
                 }
             }
         }
+
 
 
         // stage('Build and Push Docker Image') {
