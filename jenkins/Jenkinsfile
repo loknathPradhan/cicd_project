@@ -15,14 +15,14 @@ pipeline {
             }
         }
 
-        // stage('Install Dependencies') {
-        //     steps {
-        //         dir('source_code') {
-        //             echo "Installing dependencies..."
-        //             sh 'npm install --cache .npm-cache'
-        //         }
-        //     }
-        // }
+        stage('Install Dependencies') {
+            steps {
+                dir('source_code') {
+                    echo "Installing dependencies..."
+                    sh 'npm install --cache .npm-cache'
+                }
+            }
+        }
 
         // stage('Test') {
         //     steps {
