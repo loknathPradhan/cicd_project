@@ -42,8 +42,10 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
                     dir('source_code') {
-                     sh '''
+                    sh '''
                         export npm_config_cache=$WORKSPACE/.npm-cache
+                        npx --no-install sonar-scanner || true
+                        chmod +x $(find $npm_config_cache/_npx -type f -name sonar-scanner)
                         npx --no-install sonar-scanner \
                             -Dsonar.projectKey=my-node-app \
                             -Dsonar.sources=. \
